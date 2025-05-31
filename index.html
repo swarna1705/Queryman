@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Query Man - SQL Query Builder</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Query Man is a professional SQL query builder with visual database exploration, real-time results, and advanced features for database professionals and developers." />
+  <meta name="keywords" content="SQL, query builder, database, SQL editor, data visualization, database explorer" />
+  <meta name="author" content="Query Man" />
+
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Query Man - Professional SQL Query Builder" />
+  <meta property="og:description"
+    content="Build, execute and visualize SQL queries with an intuitive interface. Explore databases with ease and get real-time results." />
+  <meta property="og:image" content="/icons/og-image.svg" />
+
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Query Man - SQL Query Builder" />
+  <meta name="twitter:description"
+    content="Professional SQL query builder with visual database exploration and real-time results." />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://queryman.vercel.app/" />
+
+  <!-- Preload critical resources -->
+  <link rel="preload" href="/src/main.jsx" as="script" />
+  <link rel="preload" href="/src/components/SQLEditor.jsx" as="script" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Code+Pro:wght@400;500&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <!-- Fallback for font loading -->
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Code+Pro:wght@400;500&display=swap"
+      rel="stylesheet" type="text/css" />
+  </noscript>
+  <!-- Inline critical CSS for LCP element -->
+  <style>
+    .editor-container {
+      display: block !important;
+      visibility: visible !important;
+      min-height: 200px;
+    }
+
+    /* Font display optimization */
+    @font-face {
+      font-family: 'Source Code Pro';
+      font-display: swap;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Ensure all input fields allow pasting */
+    input,
+    textarea,
+    [contenteditable="true"] {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+
+    /* Fix Monaco editor paste prevention */
+    .monaco-editor .inputarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -ms-user-select: text !important;
+    }
+  </style>
+
+  <!-- Ensure pasting is always allowed -->
+  <script>
+    // Override paste prevention on all input elements
+    document.addEventListener('DOMContentLoaded', function () {
+      // Remove paste prevention on all current and future input elements
+      const removeAllPastePrevention = function () {
+        // Target all elements that might have paste prevention
+        const elements = document.querySelectorAll('input, textarea, [contenteditable="true"], .monaco-editor textarea, .monaco-editor .inputarea');
+
+        elements.forEach(function (el) {
+          // Enable user-select explicitly
+          el.style.userSelect = 'text';
+          el.style.webkitUserSelect = 'text';
+
+          // Remove potential readonly attributes when they shouldn't be there
+          if (el.getAttribute('role') === 'textbox') {
+            el.removeAttribute('readonly');
+          }
+
+          // Ensure autocomplete attributes don't interfere with pasting
+          if (el.getAttribute('autocomplete') === 'off') {
+            // We're just going to let it have autocomplete="off" but still ensure pasting works
+          }
+
+          // Override any existing paste event listeners that might prevent pasting
+          el.addEventListener('paste', function (e) {
+            // This will run first and allow paste operations
+            e.stopPropagation(); // Don't stop immediate propagation as that could break functionality
+          }, true);
+        });
+      };
+
+      // Initial execution
+      removeAllPastePrevention();
+
+      // Set up a MutationObserver to handle dynamically added elements
+      const observer = new MutationObserver(function (mutations) {
+        removeAllPastePrevention();
+      });
+
+      // Start observing the document with the configured parameters
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['readonly', 'autocomplete', 'onpaste']
+      });
+
+      // For Monaco editor, needs a delay to initialize fully
+      setTimeout(removeAllPastePrevention, 1000);
+      setTimeout(removeAllPastePrevention, 2000);
+    });
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Query Man",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "description": "A professional SQL query builder with database exploration and visualization capabilities.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  </script>
+
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
